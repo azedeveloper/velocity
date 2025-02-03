@@ -80,4 +80,24 @@ router.get("/users/:username/:postId", (req, res) => {
     });
 });
 
+router.get("/posts", (req, res) => {
+    const query = `
+        SELECT posts.id, posts.content, posts.author, users.username 
+        FROM posts
+        JOIN users ON posts.author = users.id
+        ORDER BY posts.id DESC
+        LIMIT 50;
+    `;
+    
+    db.all(query, [], (err, rows) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ error: "Failed to fetch posts" });
+        }
+        
+        res.json(rows);
+    });
+});
+
+
 module.exports = router;
