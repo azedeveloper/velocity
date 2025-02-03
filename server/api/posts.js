@@ -43,7 +43,7 @@ router.get("/posts/:postId", (req, res) => {
     const { postId } = req.params;
 
     const query = `
-        SELECT posts.id, posts.content, users.username
+        SELECT posts.id, posts.content, posts.created_at, users.username
         FROM posts
         JOIN users ON posts.author = users.id
         WHERE posts.id = ?
@@ -64,7 +64,7 @@ router.get("/users/:username/:postId", (req, res) => {
     const { username, postId } = req.params;
 
     const query = `
-        SELECT posts.id, posts.content, users.username
+        SELECT posts.id, posts.content, posts.created_at, users.username
         FROM posts
         JOIN users ON posts.author = users.id
         WHERE posts.id = ? AND users.username = ?
@@ -82,7 +82,7 @@ router.get("/users/:username/:postId", (req, res) => {
 
 router.get("/posts", (req, res) => {
     const query = `
-        SELECT posts.id, posts.content, posts.author, users.username 
+        SELECT posts.id, posts.content, posts.created_at, posts.author, users.username 
         FROM posts
         JOIN users ON posts.author = users.id
         ORDER BY posts.id DESC

@@ -14,16 +14,16 @@ CREATE TABLE IF NOT EXISTS users (
 );
 `);
 
-//Create posts table
+// Create posts table 
 db.run(`
     CREATE TABLE IF NOT EXISTS posts (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         author INTEGER NOT NULL,
         content TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (author) REFERENCES users (id) ON DELETE CASCADE
     );
 `);
-    
 
 function generateRandomId() {
     return Math.floor(1000000000 + Math.random() * 9000000000); 
@@ -52,6 +52,5 @@ function getUserByUsername(username) {
         });
     });
 }
-
 
 module.exports = { db, generateRandomId, getUserById, getUserByUsername };

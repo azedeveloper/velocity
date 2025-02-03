@@ -11,6 +11,17 @@
         }
     }
 
+    function formatTimestamp(timestamp) {
+        const date = new Date(timestamp);
+        return date.toLocaleString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    }
+
     fetchPosts();
 </script>
 
@@ -19,8 +30,11 @@
         {#each posts as post}
             <div class="p-7 rounded-lg shadow-md outline-neutral-800 outline outline-1 bg-neutral-950">
                 <div class="author flex text-white items-center gap-2 mb-2">
-                    <img class="w-8 rounded-full" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="User Avatar">
-                    <p class="text-lg">{post.username}</p>
+                    <img class="w-9 rounded-full" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="User Avatar">
+                    <div>
+                        <p class="text-lg">{post.username}</p>
+                        <p class="text-xs text-gray-400">{formatTimestamp(post.created_at)}</p>
+                    </div>
                 </div>
                 <p class="text-white">{post.content}</p>
             </div>
