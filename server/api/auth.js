@@ -76,6 +76,27 @@ router.post("/auth/me/pfp", (req, res) => {
     }
 });
 
+//Update about
+router.post("/auth/me/about", (req, res) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) return res.status(401).json({ error: "No token provided" });
+
+    const token = authHeader.split(" ")[1];
+    try {
+        const decoded = jwt.verify(token, SECRET_KEY);
+        const { about } = req.body;
+        const query = `UPDATE users SET about = ? WHERE id = ?`;
+        db.run(query, [about, decoded.id], (err) => {
+            if (err) {
+                return res.status(500).json({ error: "Database error" });
+            }
+            res.json({ message: "About updated" });
+        });
+    } catch (error) {
+        res.status(401).json({ error: "Invalid token" });
+    }
+});
+
 // Logout
 router.post("/auth/logout", (req, res) => {
     res.json({ message: "Logged out successfully" });
