@@ -16,4 +16,12 @@ function authenticate(req, res, next) {
     }
 }
 
-module.exports = authenticate;
+function authenticateOptional(req, res, next) {
+    if (req.headers.authorization) {
+        return authenticate(req, res, next); // Use normal authentication
+    }
+    req.user = null; // User not authenticated
+    next();
+}
+
+module.exports = { authenticate, authenticateOptional };
