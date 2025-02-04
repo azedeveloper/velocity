@@ -30,7 +30,7 @@
         {#each posts as post}
             <div class="p-7 rounded-lg shadow-md outline-neutral-800 outline outline-1 bg-neutral-950">
                 <div class="author flex text-white items-center gap-2 mb-2">
-                    <img class="w-9 rounded-full" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="User Avatar">
+                    <img class="w-9 rounded-full" src="{post.pfp}" alt="User Avatar">
                     <div>
                         <p class="text-lg">{post.username}</p>
                         <p class="text-xs text-gray-400">{formatTimestamp(post.created_at)}</p>

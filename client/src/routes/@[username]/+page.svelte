@@ -49,9 +49,9 @@
     <div class="w-full max-w-md space-y-4">
       <div class="profile text-white text-center align-middle content-center">
         <img 
-          src="https://cdn.discordapp.com/embed/avatars/0.png" 
+          src="{user.pfp}"
           alt="" 
-          class="w-7 mx-auto rounded-full"
+          class="w-24 mx-auto rounded-full"
         />
         <h1 class="text-2xl font-bold mt-2">{user.username}</h1>
         <p class="text-base">{user.about}</p>
@@ -65,7 +65,7 @@
             <div class="author flex text-white items-center gap-2 mb-2">
               <img
                 class="w-9 rounded-full"
-                src="https://cdn.discordapp.com/embed/avatars/0.png"
+                src="{post.pfp}"
                 alt="User Avatar"
               />
               <div>

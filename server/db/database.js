@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY,
     username TEXT UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL
+    password TEXT NOT NULL,
+    pfp TEXT DEFAULT "https://i.ibb.co/wNDqp1vy/default-avatar-icon-of-social-media-user-vector.jpg"
 );
 `);
 

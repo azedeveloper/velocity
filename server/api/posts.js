@@ -82,7 +82,7 @@ router.get("/users/:username/:postId", (req, res) => {
 
 router.get("/posts", (req, res) => {
     const query = `
-        SELECT posts.id, posts.content, posts.created_at, posts.author, users.username 
+        SELECT posts.id, posts.content, posts.created_at, posts.author, users.username, users.pfp 
         FROM posts
         JOIN users ON posts.author = users.id
         ORDER BY posts.id DESC
