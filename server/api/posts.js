@@ -82,7 +82,7 @@ router.get("/users/:username/:postId", (req, res) => {
 
 router.get("/posts", (req, res) => {
     const query = `
-        SELECT posts.id, posts.content, posts.created_at, posts.author, users.username, users.pfp 
+        SELECT posts.id, posts.content, posts.created_at, posts.author, posts.likes, users.username, users.pfp 
         FROM posts
         JOIN users ON posts.author = users.id
         ORDER BY posts.id DESC
@@ -96,6 +96,40 @@ router.get("/posts", (req, res) => {
         }
         
         res.json(rows);
+    });
+});
+
+// Like a post (authenticated users only)
+router.post("/posts/:postId/like", authenticate, (req, res) => {
+    const { postId } = req.params;
+    const userId = req.user.id;
+
+    // Check if the user has already liked the post
+    const checkQuery = `SELECT * FROM likes WHERE post_id = ? AND user_id = ?`;
+    db.get(checkQuery, [postId, userId], (err, row) => {
+        if (err) {
+            return res.status(500).json({ error: "Database error" });
+        }
+        if (row) {
+            return res.status(400).json({ error: "You have already liked this post" });
+        }
+
+        // Insert into likes table
+        const insertQuery = `INSERT INTO likes (post_id, user_id) VALUES (?, ?)`;
+        db.run(insertQuery, [postId, userId], function (err) {
+            if (err) {
+                return res.status(500).json({ error: "Database error" });
+            }
+
+            // Increment the likes count in the posts table
+            const updateQuery = `UPDATE posts SET likes = likes + 1 WHERE id = ?`;
+            db.run(updateQuery, [postId], function (err) {
+                if (err) {
+                    return res.status(500).json({ error: "Database error" });
+                }
+                res.json({ message: "Post liked" });
+            });
+        });
     });
 });
 

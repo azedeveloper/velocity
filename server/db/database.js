@@ -22,8 +22,20 @@ db.run(`
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         author INTEGER NOT NULL,
         content TEXT NOT NULL,
+        likes INTEGER DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (author) REFERENCES users (id) ON DELETE CASCADE
+    );
+`);
+
+// Create likes table
+db.run(`
+    CREATE TABLE IF NOT EXISTS likes (
+        post_id INTEGER NOT NULL,
+        user_id INTEGER NOT NULL,
+        PRIMARY KEY (post_id, user_id),
+        FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE,
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
     );
 `);
 

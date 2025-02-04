@@ -5,7 +5,26 @@
     const handleSubmit = (e) => {
       e.preventDefault();
       console.log('Login:', { username, password });
-      // Login logic
+      //Login logic
+      fetch('http://localhost:3000/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.token) {
+            localStorage.setItem('velocity_token', data.token);
+            window.href = '/'; // Redirect to home page
+          } else {
+            console.error('Login failed:', data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
     };
   </script>
   

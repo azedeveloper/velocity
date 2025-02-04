@@ -11,6 +11,26 @@
         }
     }
 
+    async function likePost(postId) {
+        try {
+            const res = await fetch(`http://localhost:3000/posts/${postId}/like`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("velocity_token")}` // Assuming token is stored in localStorage
+                }
+            });
+            if (!res.ok) throw new Error("Failed to like post");
+
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                post.likes += 1;
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     function formatTimestamp(timestamp) {
         const date = new Date(timestamp);
         return date.toLocaleString("en-US", {
@@ -37,6 +57,10 @@
                     </div>
                 </div>
                 <p class="text-white">{post.content}</p>
+                <div class="like flex mt-4 align-middle gap-1 items-center">
+                    <i class="fa-regular fa-heart text-gray-400 text-xl cursor-pointer" on:click={() => likePost(post.id)}></i>
+                    <p class="text-gray-400">{post.likes}</p>
+                </div>
             </div>
         {/each}
     </div>

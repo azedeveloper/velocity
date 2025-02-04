@@ -47,7 +47,7 @@
 {:else if user}
 <div class="flex items-center justify-center min-h-screen bg-neutral-950">
     <div class="w-full max-w-md space-y-4">
-      <div class="profile text-white text-center align-middle content-center">
+      <div class="profile text-white text-center align-middle content-center mt-10">
         <img 
           src="{user.pfp}"
           alt="" 
@@ -57,7 +57,7 @@
         <p class="text-base">{user.about}</p>
       </div>
       <div class="posts space-y-4">
-        <h2 class="text-white text-xl text-center">Posts:</h2>
+        <h2 class="text-white text-xl text-center"><b>Posts:</b></h2>
         {#each posts as post}
           <div
             class="p-7 rounded-lg shadow-md outline-neutral-800 outline outline-1 bg-neutral-950"
