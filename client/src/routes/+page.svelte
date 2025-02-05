@@ -4,11 +4,21 @@
 
     async function fetchPosts() {
         try {
-            const res = await fetch("http://localhost:3000/posts", {
+            let res;
+            if(localStorage.getItem("velocity_token") == null) {
+            res = await fetch("http://localhost:3000/posts", {
+                headers: {
+                }
+            });
+            } else {
+             res = await fetch("http://localhost:3000/posts", {
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem("velocity_token")}`,
                 }
             });
+            }
+
+            
             if (!res.ok) throw new Error("Failed to fetch posts");
             posts = await res.json();
         } catch (err) {
