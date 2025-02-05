@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const { db, getUserById, getUserByUsername } = require("../db/database");
 const router = express.Router();
 
+//Get a user by id
 router.get("/users/id/:id", async (req, res) => {
     const userId = req.params.id;
 
@@ -21,6 +22,7 @@ router.get("/users/id/:id", async (req, res) => {
     }
 });
 
+//Get user by username
 router.get("/users/:username", async (req, res) => {
     const username = req.params.username;
 
@@ -37,9 +39,5 @@ router.get("/users/:username", async (req, res) => {
         res.status(500).json({ error: "Database error" });
     }
 });
-
-
-
-
 
 module.exports = router;

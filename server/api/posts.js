@@ -41,7 +41,7 @@ router.delete("/posts/:postId", authenticate, (req, res) => {
 // Get a post by postId (with like status if authenticated)
 router.get("/posts/:postId", authenticateOptional, (req, res) => {
     const { postId } = req.params;
-    const userId = req.user ? req.user.id : null; // Get user ID if authenticated
+    const userId = req.user ? req.user.id : null; 
 
     const query = userId
         ? `
@@ -69,7 +69,7 @@ router.get("/posts/:postId", authenticateOptional, (req, res) => {
             return res.status(404).json({ error: "Post not found" });
         }
 
-        if (userId) post.liked = !!post.liked; // Convert liked to boolean
+        if (userId) post.liked = !!post.liked; 
 
         res.json(post);
     });
@@ -143,7 +143,7 @@ router.get("/posts", authenticateOptional, (req, res) => {
     });
 });
 
-
+//Like a post (authenticated users only)
 router.post("/posts/:postId/like", authenticate, (req, res) => {
     const { postId } = req.params;
     const userId = req.user.id;

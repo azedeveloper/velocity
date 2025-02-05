@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 const { db, generateRandomId } = require("../db/database");
 const router = express.Router();
 
@@ -37,16 +38,16 @@ router.post("/auth/login", (req, res) => {
         }
 
         const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, { expiresIn: "1h" });
-        res.json({ token });
+        res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "strict" });
+        res.json({ message: "Logged in successfully" });
     });
 });
 
 // Me
 router.get("/auth/me", (req, res) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) return res.status(401).json({ error: "No token provided" });
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ error: "No token provided" });
 
-    const token = authHeader.split(" ")[1];
     try {
         const decoded = jwt.verify(token, SECRET_KEY);
         res.json({ user: decoded });
@@ -57,7 +58,7 @@ router.get("/auth/me", (req, res) => {
 
 //Update pfp
 router.post("/auth/me/pfp", (req, res) => {
-    const authHeader = req.headers.authorization;
+    const authHeader = req.cookies.token;
     if (!authHeader) return res.status(401).json({ error: "No token provided" });
 
     const token = authHeader.split(" ")[1];
@@ -78,7 +79,7 @@ router.post("/auth/me/pfp", (req, res) => {
 
 //Update about
 router.post("/auth/me/about", (req, res) => {
-    const authHeader = req.headers.authorization;
+    const authHeader = req.cookies.token;
     if (!authHeader) return res.status(401).json({ error: "No token provided" });
 
     const token = authHeader.split(" ")[1];
@@ -99,6 +100,7 @@ router.post("/auth/me/about", (req, res) => {
 
 // Logout
 router.post("/auth/logout", (req, res) => {
+    res.clearCookie("token");
     res.json({ message: "Logged out successfully" });
 });
 

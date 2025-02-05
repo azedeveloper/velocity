@@ -2,30 +2,30 @@
     let username = '';
     let password = '';
   
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      console.log('Login:', { username, password });
-      //Login logic
-      fetch('http://localhost:3000/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.token) {
-            localStorage.setItem('velocity_token', data.token);
-            window.href = '/'; // Redirect to home page
-          } else {
-            console.error('Login failed:', data.message);
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+        const response = await fetch("http://localhost:3000/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username, password }),
+            credentials: "include"  // Ensures cookies are sent with the request
         });
-    };
+
+        const data = await response.json();
+
+        if (response.ok) {
+            window.location.href = "/"; // Redirect to home
+        } else {
+            console.error("Login failed:", data.error);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+};
   </script>
   
   <div class="flex items-center justify-center min-h-screen bg-neutral-950">
