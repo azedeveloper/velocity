@@ -5,6 +5,7 @@ const router = express.Router();
 
 // Create a new post (authenticated users only)
 router.post("/posts", authenticate, (req, res) => {
+    console.log("Request Body:", req.body);
     const { content } = req.body;
     const author = req.user.id;
 

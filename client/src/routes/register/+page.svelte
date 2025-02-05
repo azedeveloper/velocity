@@ -3,10 +3,29 @@
     let username = '';
     let password = '';
   
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      // Register logic
-    };
+      const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+        const response = await fetch("http://localhost:3000/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email, username, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            window.location.href = "/login"; 
+        } else {
+            console.error("Register failed:", data.error);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+};
   </script>
   
   <div class="flex items-center justify-center min-h-screen bg-neutral-950">

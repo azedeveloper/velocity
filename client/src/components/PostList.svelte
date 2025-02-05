@@ -25,7 +25,7 @@
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", n
+        credentials: "include", 
       });
 
       if (!res.ok) throw new Error("Failed to like/unlike post");
