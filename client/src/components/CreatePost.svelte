@@ -29,7 +29,7 @@
 
 </script>
 
-<div class="w-full max-w-md space-y-4 mb-5 mt-2">
+<div class="w-full max-w-lg space-y-4 mb-5 mt-2">
     <div class="flex items-center p-2 rounded-lg shadow-md outline-neutral-800 outline outline-1 bg-neutral-950">
         <textarea 
             id="content" 

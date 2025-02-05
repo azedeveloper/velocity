@@ -39,7 +39,7 @@
             type="text"
             bind:value={username}
             required
-            class="w-full mt-1 px-4 py-2 border border-neutral-800 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-neutral-900 text-white"
+            class="w-full mt-1 px-4 py-2 border border-neutral-800 rounded-lg shadow-sm focus:ring-purple-600 focus:ring-purple-600 bg-neutral-950 text-white"
           />
         </div>
         <div>
@@ -49,18 +49,18 @@
             type="password"
             bind:value={password}
             required
-            class="w-full mt-1 px-4 py-2 border border-neutral-800 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-neutral-900 text-white"
+            class="w-full mt-1 px-4 py-2 border border-neutral-800 rounded-lg shadow-sm focus:ring-purple-600 focus:ring-purple-600 bg-neutral-950 text-white"
           />
         </div>
         <button
           type="submit"
-          class="w-full px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-md focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          class="w-full px-4 py-2 text-white bg-purple-600 hover:bg-purple-700 rounded-lg shadow-md focus:ring-2 focus:ring-purple-600 focus:ring-offset-2 duration-300"
         >
           Log In
         </button>
       </form>
       <p class="mt-4 text-sm text-center text-gray-300">
-        Don't have an account? <a href="/register" class="text-indigo-600 hover:underline">Sign up</a>
+        Don't have an account? <a href="/register" class="text-purple-600 hover:underline">Sign up</a>
       </p>
     </div>
   </div>

@@ -62,7 +62,7 @@
   onMount(fetchPosts);
 </script>
 
-<div class="w-full max-w-md space-y-4">
+<div class="w-full max-w-lg space-y-4">
   {#each posts as post}
     <div
       class="p-7 rounded-lg shadow-md outline-neutral-800 outline outline-1 bg-neutral-950"
