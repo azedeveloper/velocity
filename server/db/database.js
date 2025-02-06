@@ -24,7 +24,9 @@ db.run(`
         content TEXT NOT NULL,
         likes INTEGER DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (author) REFERENCES users (id) ON DELETE CASCADE
+        parent_id INTEGER DEFAULT NULL,
+        FOREIGN KEY (author) REFERENCES users (id) ON DELETE CASCADE,
+        FOREIGN KEY (parent_id) REFERENCES posts (id) ON DELETE CASCADE
     );
 `);
 

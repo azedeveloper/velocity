@@ -5,22 +5,23 @@ const router = express.Router();
 
 // Create a new post (authenticated users only)
 router.post("/posts", authenticate, (req, res) => {
-    console.log("Request Body:", req.body);
-    const { content } = req.body;
+    const { content, parent_id = null } = req.body;
     const author = req.user.id;
 
     if (!content) {
         return res.status(400).json({ error: "Content is required" });
     }
 
-    const query = `INSERT INTO posts (author, content) VALUES (?, ?)`;
-    db.run(query, [author, content], function (err) {
+    const query = `INSERT INTO posts (author, content, parent_id) VALUES (?, ?, ?)`;
+    db.run(query, [author, content, parent_id], function (err) {
         if (err) {
             return res.status(500).json({ error: "Database error" });
         }
         res.status(201).json({ message: "Post created", postId: this.lastID });
     });
 });
+
+
 
 // Delete a post (authenticated users only, must be the author)
 router.delete("/posts/:postId", authenticate, (req, res) => {
@@ -42,19 +43,18 @@ router.delete("/posts/:postId", authenticate, (req, res) => {
 // Get a post by postId (with like status if authenticated)
 router.get("/posts/:postId", authenticateOptional, (req, res) => {
     const { postId } = req.params;
-    const userId = req.user ? req.user.id : null; 
+    const userId = req.user ? req.user.id : null;
 
     const query = userId
         ? `
-            SELECT posts.id, posts.content, posts.created_at, posts.likes, users.username,
-                   users.pfp,
-                   (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id AND likes.user_id = ?) AS liked
+            SELECT posts.id, posts.content, posts.created_at, posts.likes, users.username, users.pfp,
+                   EXISTS (SELECT 1 FROM likes WHERE likes.post_id = posts.id AND likes.user_id = ?) AS liked
             FROM posts
             JOIN users ON posts.author = users.id
             WHERE posts.id = ?
         `
         : `
-            SELECT posts.id, posts.content, posts.created_at, posts.likes, users.username, users.pfp
+            SELECT posts.id, posts.content, posts.created_at, posts.likes, users.username, users.pfp, 0 AS liked
             FROM posts
             JOIN users ON posts.author = users.id
             WHERE posts.id = ?
@@ -63,18 +63,14 @@ router.get("/posts/:postId", authenticateOptional, (req, res) => {
     const params = userId ? [userId, postId] : [postId];
 
     db.get(query, params, (err, post) => {
-        if (err) {
-            return res.status(500).json({ error: "Database error" });
-        }
-        if (!post) {
-            return res.status(404).json({ error: "Post not found" });
-        }
+        if (err) return res.status(500).json({ error: "Database error" });
+        if (!post) return res.status(404).json({ error: "Post not found" });
 
-        if (userId) post.liked = !!post.liked; 
-
+        post.liked = !!post.liked; // Convert to boolean
         res.json(post);
     });
 });
+
 
 // Get a post by username and postId (with like status if authenticated)
 router.get("/users/:username/:postId", authenticateOptional, (req, res) => {
@@ -113,6 +109,72 @@ router.get("/users/:username/:postId", authenticateOptional, (req, res) => {
     });
 });
 
+router.get("/posts/:postId/replies", authenticateOptional, (req, res) => {
+    const { postId } = req.params;
+    const userId = req.user ? req.user.id : null;
+
+    const query = userId
+        ? `
+            WITH RECURSIVE reply_tree AS (
+                SELECT posts.*, users.username, users.pfp,
+                       EXISTS (SELECT 1 FROM likes WHERE likes.post_id = posts.id AND likes.user_id = ?) AS liked
+                FROM posts
+                JOIN users ON posts.author = users.id
+                WHERE posts.id = ?
+
+                UNION ALL
+
+                SELECT p.*, u.username, u.pfp,
+                       EXISTS (SELECT 1 FROM likes WHERE likes.post_id = p.id AND likes.user_id = ?) AS liked
+                FROM posts p
+                JOIN reply_tree rt ON p.parent_id = rt.id
+                JOIN users u ON p.author = u.id
+            )
+            SELECT * FROM reply_tree ORDER BY created_at ASC;
+        `
+        : `
+            WITH RECURSIVE reply_tree AS (
+                SELECT posts.*, users.username, users.pfp, 0 AS liked
+                FROM posts
+                JOIN users ON posts.author = users.id
+                WHERE posts.id = ?
+
+                UNION ALL
+
+                SELECT p.*, u.username, u.pfp, 0 AS liked
+                FROM posts p
+                JOIN reply_tree rt ON p.parent_id = rt.id
+                JOIN users u ON p.author = u.id
+            )
+            SELECT * FROM reply_tree ORDER BY created_at ASC;
+        `;
+
+    const params = userId ? [userId, postId, userId] : [postId];
+
+    db.all(query, params, (err, rows) => {
+        if (err) return res.status(500).json({ error: "Failed to fetch replies" });
+
+        if (rows.length === 0) return res.status(404).json({ error: "Post not found" });
+
+        rows.forEach(reply => reply.liked = !!reply.liked); // Ensure boolean value
+        res.json(rows);
+    });
+});
+
+//Get replies count
+router.get("/posts/:postId/replies/count", (req, res) => {
+    const { postId } = req.params;
+
+    const query = `SELECT COUNT(*) AS count FROM posts WHERE parent_id = ?`;
+
+    db.get(query, [postId], (err, row) => {
+        if (err) return res.status(500).json({ error: "Database error" });
+
+        res.json(row);
+    });
+});
+
+
 // Get all posts (with like status if authenticated)
 router.get("/posts", authenticateOptional, (req, res) => {
     const userId = req.user ? req.user.id : null;
@@ -123,6 +185,7 @@ router.get("/posts", authenticateOptional, (req, res) => {
                    EXISTS (SELECT 1 FROM likes WHERE likes.post_id = posts.id AND likes.user_id = ?) AS liked
             FROM posts
             JOIN users ON posts.author = users.id
+            WHERE posts.parent_id IS NULL
             ORDER BY posts.id DESC
             LIMIT 50;
         `
@@ -130,6 +193,7 @@ router.get("/posts", authenticateOptional, (req, res) => {
             SELECT posts.id, posts.content, posts.created_at, posts.likes, users.username, users.pfp, 0 AS liked
             FROM posts
             JOIN users ON posts.author = users.id
+            WHERE posts.parent_id IS NULL
             ORDER BY posts.id DESC
             LIMIT 50;
         `;
@@ -143,6 +207,7 @@ router.get("/posts", authenticateOptional, (req, res) => {
         res.json(rows);
     });
 });
+
 
 //Like a post (authenticated users only)
 router.post("/posts/:postId/like", authenticate, (req, res) => {
