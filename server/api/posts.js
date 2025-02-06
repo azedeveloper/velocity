@@ -184,7 +184,4 @@ router.post("/posts/:postId/like", authenticate, (req, res) => {
     });
 });
 
-
-
-
 module.exports = router;

@@ -101,6 +101,7 @@ router.post("/auth/me/about", authenticate, (req, res) => {
 router.post("/auth/logout", (req, res) => {
     res.clearCookie("token");
     res.json({ message: "Logged out successfully" });
+    logout();
 });
 
 module.exports = router;

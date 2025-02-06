@@ -69,6 +69,7 @@
       <div class="profile text-white text-center mt-10">
         {#if ownProfile}
           <button on:click={() => editing = !editing} class="mb-4 bg-purple-600 text-white px-4 py-2 rounded">{editing ? "Back" : "Edit Profile"}</button>
+          <button on:click={() => window.location.href = '/logout'} class="mb-4 bg-red-600 text-white px-4 py-2 rounded">Logout</button>
         {/if}
 
         {#if editing}
