@@ -7,6 +7,7 @@
   let replies = [];
   let replyContent = "";
   let liked = false;
+  let parentData = "";
 
   function formatTimestamp(timestamp) {
     const date = new Date(timestamp);
@@ -23,6 +24,14 @@
 
       // put the postreplycount in data
       data[0].replyCount = await postRepliesCount(postId);
+
+      if(data[0].parent_id) {
+        let parentRes = await fetch(`http://localhost:3000/posts/${data[0].parent_id}`, {
+          credentials: "include",
+        });
+        if (!parentRes.ok) throw new Error("Failed to fetch parent post");
+        parentData = await parentRes.json();
+      }
 
       post = data[0];
       post = { ...data[0], liked: data[0].liked };
@@ -114,7 +123,12 @@
     class="p-7 rounded-lg shadow-md outline-neutral-800 outline outline-1 bg-neutral-950 max-w-lg mx-auto my-auto justify-center align-middle self-center flex flex-col mt-10"
   >
   {#if post}
-    <div class="author flex text-white items-center gap-2 mb-2">
+      {#if post.parent_id} 
+      <div class="replying">
+        <p class="text-gray-400 mb-1 cursor-pointer" on:click={() => navigate(`/post/${post.parent_id}`)}>Replying to <b class="text-white">{parentData.username}</b></p>
+      </div>
+      {/if}
+    <div class="author flex text-white items-center gap-2 mb-2 cursor-pointer" on:click={() => navigate(`/@${post.username}`)}>
       <img class="w-9 rounded-full" src={post.pfp} alt="User Avatar" />
       <div>
         <p class="text-lg">{post.username}</p>
@@ -153,7 +167,7 @@
 
     {#each replies as reply}
       <div class="p-4 bg-neutral-950 outline-1 mt-2">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 cursor-pointer" on:click={() => navigate(`/@${reply.username}`)}>
           <img class="w-7 rounded-full" src={reply.pfp} alt="User Avatar" />
           <p class="text-white"><b>{reply.username}</b> <span class="text-gray-400">{formatTimestamp(post.created_at)}</span></p>
         </div>
