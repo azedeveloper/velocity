@@ -2,6 +2,9 @@
     let email = '';
     let username = '';
     let password = '';
+
+    let error = false;
+    let errorMsg = '';
   
       const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,10 +23,12 @@
         if (response.ok) {
             window.location.href = "/login"; 
         } else {
-            console.error("Register failed:", data.error);
+            error = true;
+            errorMsg = data.error;
         }
     } catch (error) {
-        console.error("Error:", error);
+        error = true;
+        errorMsg = error;
     }
 };
   </script>
@@ -61,6 +66,9 @@
             required
             class="w-full mt-1 px-4 py-2 border border-neutral-800 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500 bg-neutral-950 text-white"
           />
+        {#if error}
+        <p class="text-red-500 text-center mt-3">{errorMsg}</p>
+        {/if} 
         </div>
         <button
           type="submit"

@@ -1,6 +1,9 @@
 <script>
     let username = '';
     let password = '';
+
+    let error = false;
+    let errorMsg = '';
   
     const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,12 +21,14 @@
         const data = await response.json();
 
         if (response.ok) {
-            window.location.href = "/"; // Redirect to home
+            window.location.href = "/"; 
         } else {
-            console.error("Login failed:", data.error);
+            error = true;
+            errorMsg = data.error;
         }
     } catch (error) {
-        console.error("Error:", error);
+        error = true;
+        errorMsg = error;
     }
 };
   </script>
@@ -51,6 +56,9 @@
             required
             class="w-full mt-1 px-4 py-2 border border-neutral-800 rounded-lg shadow-sm focus:ring-purple-600 focus:ring-purple-600 bg-neutral-950 text-white"
           />
+        {#if error}
+        <p class="text-red-500 text-center mt-3">{errorMsg}</p>
+        {/if} 
         </div>
         <button
           type="submit"
