@@ -44,7 +44,7 @@
             type="text"
             bind:value={username}
             required
-            class="w-full mt-1 px-4 py-2 border border-neutral-800 rounded-lg shadow-sm focus:ring-purple-600 focus:ring-purple-600 bg-neutral-950 text-white"
+            class="w-full mt-1 px-4 py-2 border border-neutral-800 rounded-lg shadow-sm focus:ring-rose-500 focus:ring-rose-500 bg-neutral-950 text-white"
           />
         </div>
         <div>
@@ -54,7 +54,7 @@
             type="password"
             bind:value={password}
             required
-            class="w-full mt-1 px-4 py-2 border border-neutral-800 rounded-lg shadow-sm focus:ring-purple-600 focus:ring-purple-600 bg-neutral-950 text-white"
+            class="w-full mt-1 px-4 py-2 border border-neutral-800 rounded-lg shadow-sm focus:ring-rose-500 focus:ring-rose-500 bg-neutral-950 text-white"
           />
         {#if error}
         <p class="text-red-500 text-center mt-3">{errorMsg}</p>
@@ -62,13 +62,13 @@
         </div>
         <button
           type="submit"
-          class="w-full px-4 py-2 text-white bg-purple-600 hover:bg-purple-700 rounded-lg shadow-md focus:ring-2 focus:ring-purple-600 focus:ring-offset-2 duration-300"
+          class="w-full px-4 py-2 text-white bg-rose-500 hover:bg-rose-700 rounded-lg shadow-md focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 duration-300"
         >
           Log In
         </button>
       </form>
       <p class="mt-4 text-sm text-center text-gray-300">
-        Don't have an account? <a href="/register" class="text-purple-600 hover:underline">Sign up</a>
+        Don't have an account? <a href="/register" class="text-rose-500 hover:underline">Sign up</a>
       </p>
     </div>
   </div>

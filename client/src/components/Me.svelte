@@ -35,7 +35,7 @@
         {#if user.username}
             <h1 class="text-lg cursor-pointer" onclick={() => window.location = `/@${user.username}`}>@{user.username}</h1>
         {:else}
-            <h1 class="text-sm">Please <a href="/login" class="text-purple-600">Login</a> or <a href="/register" class="text-purple-600">Register</a> to use Velocity.</h1>
+            <h1 class="text-sm">Please <a href="/login" class="text-rose-500">Login</a> or <a href="/register" class="text-rose-500">Register</a> to use Velocity.</h1>
         {/if}
     </div>
 </div>

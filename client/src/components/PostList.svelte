@@ -81,7 +81,7 @@
 <div class="w-full max-w-lg space-y-4">
   {#each posts as post}
   <div class="p-7 rounded-lg shadow-md outline-neutral-800 outline outline-1 bg-neutral-950">
-    <div class="author flex text-white items-center gap-2 cursor-pointer mb-2" on:click={() => navigate(`/@${post.username}`)}>
+    <div class="author flex text-white items-center gap-2 cursor-pointer mb-1" on:click={() => navigate(`/@${post.username}`)}>
       <img class="w-9 rounded-full" src={post.pfp} alt="User Avatar" />
       <div>
         <p class="text-lg">{post.username}</p>
@@ -89,8 +89,8 @@
       </div>
     </div>
     <p class="text-white">{post.content}</p>
-    <div class="like flex mt-4 align-middle gap-4 items-center">
-      <div class="like flex align-middle gap-2 items-center">
+    <div class="like flex mt-1 align-middle gap-4 items-center">
+      <div class="like flex align-middle gap-1 items-center">
         <i
           class="{post.liked
             ? 'fa-solid fa-heart text-pink-500'

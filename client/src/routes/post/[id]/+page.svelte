@@ -156,7 +156,7 @@
         class="w-full p-2 text-white bg-neutral-950 border-neutral-800 rounded"
       />
       <button
-        class="px-4 py-2 bg-purple-600 text-white rounded"
+        class="px-4 py-2 bg-rose-500 text-white rounded"
         on:click={() => replyToPost(replyContent)}
       >
         Reply

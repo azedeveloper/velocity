@@ -19,7 +19,7 @@
     .then(response => response.json())
     .then(data => {
         console.log('Success:', data);
-        content = ''; // Clear only after successful submission
+        content = ''; 
         location.reload();
     })
     .catch((error) => {
@@ -35,10 +35,10 @@
             id="content" 
             bind:value={content} 
             placeholder="What's happening?"
-            class="w-full resize-none outline-none text-lg bg-transparent p-2 text-white border-none rounded-lg h-fit "
+            class="w-full resize-none outline-none focus:ring-rose-500 text-lg bg-transparent p-2 text-white border-none rounded-lg h-fit "
         ></textarea>
         <button on:click={handleSubmit} 
-            class="bg-purple-700 w-10 h-10 flex items-center justify-center text-center text-2xl p-2 ml-3 rounded-full text-white">
+            class="bg-rose-500 w-10 h-10 flex items-center justify-center text-center text-2xl p-2 ml-3 rounded-full text-white">
             +
         </button>
     </div>
